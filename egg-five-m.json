@@ -1,0 +1,162 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-11-03T20:54:51+01:00",
+    "name": "FiveM",
+    "author": "parker@parkervcp.com",
+    "description": "A new FiveM egg for the latest builds due to recent changes in FiveM",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/parkervcp\/yolks:debian": "ghcr.io\/parkervcp\/yolks:debian"
+    },
+    "file_denylist": [],
+    "startup": "[ \"{{FIVEM_VERSION_UPDATE}}\" -eq 1 ] && bash \/home\/container\/update.sh -n || [ \"{{CACHE}}\" -eq 1 ] && bash \/home\/container\/cache.sh || (.\/chown.sh && $(pwd)\/alpine\/opt\/cfx-server\/ld-musl-x86_64.so.1 --library-path \"$(pwd)\/alpine\/usr\/lib\/v8\/:$(pwd)\/alpine\/lib\/:$(pwd)\/alpine\/usr\/lib\/\" -- $(pwd)\/alpine\/opt\/cfx-server\/FXServer +set citizen_dir $(pwd)\/alpine\/opt\/cfx-server\/citizen\/ +set txAdminPort{{TXHOST_TXA_PORT}} $( [ \"$TXADMIN_ENABLE\" == \"1\" ] || printf %s '+exec server.cfg' ))",
+    "config": {
+        "files": "{\r\n    \"txData\/server\/settings.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"set sv_forceIndirectListing\": \"set sv_forceIndirectListing true\",\r\n            \"set sv_listingHostOverride\": \"set sv_listingHostOverride \\\"fivem.underdoggaming.net\\\"\",\r\n            \"set sv_proxyIPRanges\": \"set sv_proxyIPRanges \\\"202.61.252.227\/24\\\"\",\r\n            \"set sv_endpoints\": \"set sv_endpoints \\\"202.61.252.227:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_tcp\": \"endpoint_add_tcp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_udp\": \"endpoint_add_udp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"sv_hostname\": \"sv_hostname \\\"{{server.build.env.SERVER_HOSTNAME}}\\\"\",\r\n            \"sets sv_projectName\": \"sets sv_projectName \\\" {{server.build.env.SERVER_PROJECTNAME}}\\\"\",\r\n            \"sets sv_projectDesc\": \"sets sv_projectDesc \\\"{{server.build.env.SERVER_DESCRIPTION}}\\\"\",\r\n            \"sets tags\": \"sets tags \\\"{{server.build.env.SERVER_TAGES}}\\\"\",\r\n            \"set sv_licenseKey\": \"set sv_licenseKey {{server.build.env.FIVEM_LICENSE}}\",\r\n            \"set steam_webApiKey\": \"set steam_webApiKey {{server.build.env.STEAM_WEBAPIKEY}}\",\r\n            \"sv_maxclients\": \"sv_maxclients {{server.build.env.MAX_PLAYERS}}\",\r\n            \"sv_enforceGameBuild\": \"sv_enforceGameBuild {{server.build.env.BUILD}}\",\r\n            \"sets locale\": \"sets locale \\\"de-DE\\\"\",\r\n            \"sv_pureLevel\": \"sv_pureLevel \\\"{{server.build.env.SERVER_PURELEVEL}}\\\"\"\r\n        }\r\n    },\r\n    \"txData\/server\/server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"header\": \"# ==================================================\\n#   Diese Datei wird automatisch verwaltet!\\n#   Manuelle \\u00c4nderungen k\\u00f6nnen \\u00fcberschrieben werden.\\n# ==================================================\\n\",\r\n            \"exec_settings\": \"exec settings.cfg\",\r\n            \"exec_resource\": \"exec resource.cfg\",\r\n            \"exec_permission\": \"exec permission.cfg\",\r\n            \"exec_easyadmin\": \"exec easyadmin.cfg\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"succeeded. Welcome!\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# FiveM Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\napt update -y\r\napt install -y tar xz-utils file jq git unzip\r\n\r\nmkdir -p \/mnt\/server\/resources\r\n\r\ncd \/mnt\/server\r\n\r\necho \"updating citizenfx resource files\"\r\ngit clone https:\/\/github.com\/citizenfx\/cfx-server-data.git \/tmp\r\ncp -Rf \/tmp\/resources\/* resources\/\r\n\r\nRELEASE_PAGE=$(curl -sSL https:\/\/runtime.fivem.net\/artifacts\/fivem\/build_proot_linux\/master\/)\r\nCHANGELOGS_PAGE=$(curl -sSL https:\/\/changelogs-live.fivem.net\/api\/changelog\/versions\/linux\/server)\r\n\r\nif [[ \"${FIVEM_VERSION}\" == \"recommended\" ]] || [[ -z ${FIVEM_VERSION} ]]; then\r\n  DOWNLOAD_LINK=$(echo $CHANGELOGS_PAGE | jq -r '.recommended_download')\r\nelif [[ \"${FIVEM_VERSION}\" == \"latest\" ]]; then\r\n  DOWNLOAD_LINK=$(echo $CHANGELOGS_PAGE | jq -r '.latest_download')\r\nelse\r\n  VERSION_LINK=$(echo -e \"${RELEASE_PAGE}\" | grep -Eo '\".*\/*.tar.xz\"' | grep -Eo '\".*\/*.tar.xz\"' | sed 's\/\\\"\/\/g'  | sed 's\/\\.\\\/\/\/1' | grep -i \"${FIVEM_VERSION}\" | grep -o =.* |  tr -d '=')\r\n  if [[ \"${VERSION_LINK}\" == \"\" ]]; then\r\n    echo -e \"defaulting to recommended as the version requested was invalid.\"\r\n    DOWNLOAD_LINK=$(echo $CHANGELOGS_PAGE | jq -r '.recommended_download')\r\n  else\r\n    DOWNLOAD_LINK=$(echo https:\/\/runtime.fivem.net\/artifacts\/fivem\/build_proot_linux\/master\/${VERSION_LINK})\r\n  fi\r\nfi\r\n\r\nif [ ! -z \"${DOWNLOAD_URL}\" ]; then\r\n  if curl --output \/dev\/null --silent --head --fail ${DOWNLOAD_URL}; then\r\n    echo -e \"link is valid. setting download link to ${DOWNLOAD_URL}\"\r\n    DOWNLOAD_LINK=${DOWNLOAD_URL}\r\n  else\r\n    echo -e \"link is invalid closing out\"\r\n    exit 2\r\n  fi\r\nfi\r\n\r\necho -e \"Running curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*\/}\"\r\n\r\ncurl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*\/}\r\n\r\necho \"Extracting fivem files\"\r\n\r\nFILETYPE=$(file -F ',' ${DOWNLOAD_LINK##*\/} | cut -d',' -f2 | cut -d' ' -f2)\r\nif [ \"$FILETYPE\" == \"gzip\" ]; then\r\n  tar xzvf ${DOWNLOAD_LINK##*\/}\r\nelif [ \"$FILETYPE\" == \"Zip\" ]; then\r\n  unzip ${DOWNLOAD_LINK##*\/}\r\nelif [ \"$FILETYPE\" == \"XZ\" ]; then\r\n  tar xvf ${DOWNLOAD_LINK##*\/}\r\nelse\r\n  echo -e \"unknown filetype. Exiting\"\r\n  exit 2\r\nfi\r\n\r\nrm -rf ${DOWNLOAD_LINK##*\/} run.sh\r\n\r\nif [ -e server.cfg ]; then\r\n  echo \"Skipping downloading default server config file as one already exists\"\r\nelse\r\n  echo \"Downloading default fivem config\"\r\n  curl https:\/\/raw.githubusercontent.com\/parkervcp\/eggs\/master\/game_eggs\/gta\/fivem\/server.cfg >>server.cfg\r\nfi\r\n\r\nif [ -e cache.sh ]; then\r\n  echo \"Skipping cache.sh as it already exists\"\r\nelse\r\n  echo \"Downloading cache.sh\"\r\n  curl -sSL https:\/\/raw.githubusercontent.com\/ChanBot-Group\/bash_scripte\/main\/cache.sh -o cache.sh\r\n  chmod +x cache.sh\r\nfi\r\n\r\nif [ -e chown.sh ]; then\r\n  echo \"Skipping chown.sh as it already exists\"\r\nelse\r\n  echo \"Downloading chown.sh\"\r\n  curl -sSL https:\/\/raw.githubusercontent.com\/ChanBot-Group\/bash_scripte\/main\/chown.sh -o chown.sh\r\n  chmod +x chown.sh\r\nfi\r\n\r\nif [ -e update.sh ]; then\r\n  echo \"Skipping update.sh as it already exists\"\r\nelse\r\n  echo \"Downloading update.sh\"\r\n  curl -sSL https:\/\/raw.githubusercontent.com\/ChanBot-Group\/bash_scripte\/main\/update.sh -o update.sh\r\n  chmod +x update.sh\r\nfi\r\n\r\necho \"Custom scripts installed\"",
+            "container": "ghcr.io\/parkervcp\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "fivem license",
+            "description": "Required to start the service. Get your keys at https:\/\/portal.cfx.ret\/",
+            "env_variable": "FIVEM_LICENSE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:33",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "Set the fivem max play count",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "48",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,1024",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Hostname",
+            "description": "The name that shows up in the server browser",
+            "env_variable": "SERVER_HOSTNAME",
+            "default_value": "My new FXServer!",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "fivem version update",
+            "description": "Turning the FiveM update script on and off - Always stay up to date.\n\nThis variable only applies once and is deactivated again after activation and successful update.\n\nYou can get the latest version from here - https:\/\/runtime.fivem.net\/artifacts\/fivem\/build_proot_linux\/master\/",
+            "env_variable": "FIVEM_VERSION_UPDATE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Web Api Key",
+            "description": "Use your Steam WebApiKey or set to 'none'. Get your key at https:\/\/steamcommunity.com\/dev\/apikey\/",
+            "env_variable": "STEAM_WEBAPIKEY",
+            "default_value": "none",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "txAdmin Port",
+            "description": "The port for the txAdmin panel",
+            "env_variable": "TXHOST_TXA_PORT",
+            "default_value": "40120",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Enable txadmin",
+            "description": "Enables txadmin.\r\n\r\nset to 1 to enable. (default is 0 for false)",
+            "env_variable": "TXADMIN_ENABLE",
+            "default_value": "0",
+            "user_viewable": false,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Gamebuilds",
+            "description": "Enforcing game build allows you to force a specific DLC version to your server, allowing you to play with the latest maps, clothing, vehicles and more!",
+            "env_variable": "BUILD",
+            "default_value": "3258",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:2060,2189,2372,2545,2699,2802,2944,3095,3258,3407,3570",
+            "field_type": "text"
+        },
+        {
+            "name": "Empty Server Cache",
+            "description": "This helps to remove obsolete or corrupted data, which can solve performance problems, script errors, crashes or problems loading the game world.",
+            "env_variable": "CACHE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Description",
+            "description": "Setting a server description is useful for providing a short and to the point overview of your server. You can easily set a small project server description for your FiveM game server, which will display besides your server name on the server list.",
+            "env_variable": "SERVER_DESCRIPTION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string|max:200",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Tags",
+            "description": "Setting server tags can be beneficial to narrowing down what your server is about, and allow potential players to view your server when filtering out servers based on their likings.",
+            "env_variable": "SERVER_TAGES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string|max:200",
+            "field_type": "text"
+        },
+        {
+            "name": "PROJECT NAME",
+            "description": "",
+            "env_variable": "SERVER_PROJECTNAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string|max:50",
+            "field_type": "text"
+        },
+        {
+            "name": "PURE LEVEL",
+            "description": "0: Deaktivieren\r\n1: Blockiert alle ge\u00e4nderten Client-Dateien au\u00dfer Audiodateien und bekannten Grafikmods.\r\n2: Blockiert alle modifizierten Client-Dateien.",
+            "env_variable": "SERVER_PURELEVEL",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:0,1,2",
+            "field_type": "text"
+        }
+    ]
+}
