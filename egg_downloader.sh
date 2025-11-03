@@ -5,7 +5,7 @@
 # Usage: ./json.sh [folder]
 # ===============================
 
-TOKEN=""  # GitHub Token
+TOKEN=""  # GitHub Token https://github.com/settings/tokens
 USER="pelican-eggs"
 REPO="eggs"
 BRANCH="master"
