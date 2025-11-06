@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2025-11-03T21:22:35+01:00",
+    "exported_at": "2025-11-06T22:03:29+01:00",
     "name": "FiveM",
     "author": "mainhunter@chanbot.de",
     "description": "A new FiveM egg for the latest builds due to recent changes in FiveM",
@@ -13,10 +13,9 @@
         "ghcr.io\/parkervcp\/yolks:debian": "ghcr.io\/parkervcp\/yolks:debian"
     },
     "file_denylist": [],
-    "startup": "bash /home/container/utilities.sh {{FIVEM_VERSION_UPDATE:+update}} {{SERVER_CACHE:+cache}} -y; $(pwd)/alpine/opt/cfx-server/ld-musl-x86_64.so.1 --library-path \"$(pwd)/alpine/usr/lib/v8/:$(pwd)/alpine/lib/:$(pwd)/alpine/usr/lib/\" -- $(pwd)/alpine/opt/cfx-server/FXServer +set citizen_dir $(pwd)/alpine/opt/cfx-server/citizen/ +set txAdminPort {{TXADMIN_PORT}}"
-",
+    "startup": "bash \/home\/container\/utilities.sh $( [ \"{{FIVEM_VERSION_UPDATE}}\" -eq 1 ] && echo update ) $( [ \"{{SERVER_CACHE}}\" -eq 1 ] && echo cache ) -y; ($(pwd)\/alpine\/opt\/cfx-server\/ld-musl-x86_64.so.1 --library-path \"$(pwd)\/alpine\/usr\/lib\/v8\/:$(pwd)\/alpine\/lib\/:$(pwd)\/alpine\/usr\/lib\/\" -- $(pwd)\/alpine\/opt\/cfx-server\/FXServer +set citizen_dir $(pwd)\/alpine\/opt\/cfx-server\/citizen\/ +set txAdminPort ${TXADMIN_PORT})",
     "config": {
-        "files": "{\r\n    \"txData\/server\/settings.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"set sv_forceIndirectListing\": \"set sv_forceIndirectListing true\",\r\n            \"set sv_listingHostOverride\": \"set sv_listingHostOverride \\\"fivem.underdoggaming.net\\\"\",\r\n            \"set sv_proxyIPRanges\": \"set sv_proxyIPRanges \\\"202.61.252.227\/24\\\"\",\r\n            \"set sv_endpoints\": \"set sv_endpoints \\\"202.61.252.227:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_tcp\": \"endpoint_add_tcp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_udp\": \"endpoint_add_udp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"sv_hostname\": \"sv_hostname \\\"{{server.build.env.SERVER_HOSTNAME}}\\\"\",\r\n            \"sets sv_projectName\": \"sets sv_projectName \\\" {{server.build.env.SERVER_PROJECTNAME}}\\\"\",\r\n            \"sets sv_projectDesc\": \"sets sv_projectDesc \\\"{{server.build.env.SERVER_DESCRIPTION}}\\\"\",\r\n            \"sets tags\": \"sets tags \\\"{{server.build.env.SERVER_TAGES}}\\\"\",\r\n            \"set sv_licenseKey\": \"set sv_licenseKey {{server.build.env.FIVEM_LICENSE}}\",\r\n            \"set steam_webApiKey\": \"set steam_webApiKey {{server.build.env.STEAM_WEBAPIKEY}}\",\r\n            \"sv_maxclients\": \"sv_maxclients {{server.build.env.MAX_PLAYERS}}\",\r\n            \"sv_enforceGameBuild\": \"sv_enforceGameBuild {{server.build.env.BUILD}}\",\r\n            \"sets locale\": \"sets locale \\\"{{server.build.env.SERVER_LOCALE}}\\\"\",\r\n            \"sv_pureLevel\": \"sv_pureLevel \\\"{{server.build.env.SERVER_PURELEVEL}}\\\"\"\r\n        }\r\n    },\r\n    \"txData\/server\/server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"header\": \"# ==================================================\\n#   Diese Datei wird automatisch verwaltet!\\n#   Manuelle \\u00c4nderungen k\\u00f6nnen \\u00fcberschrieben werden.\\n# ==================================================\\n\",\r\n            \"exec_settings\": \"exec settings.cfg\",\r\n            \"exec_resource\": \"exec resource.cfg\",\r\n            \"exec_permission\": \"exec permission.cfg\",\r\n            \"exec_easyadmin\": \"exec easyadmin.cfg\"\r\n        }\r\n    }\r\n}",
+        "files": "{\r\n    \"txData\/server\/settings.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"set sv_forceIndirectListing\": \"set sv_forceIndirectListing {{server.build.env.SETTINGS_PROXY}}\",\r\n            \"set sv_listingHostOverride\": \"set sv_listingHostOverride \\\"{{server.build.env.SETTINGS_PROXYURL}}\\\"\",\r\n            \"set sv_proxyIPRanges\": \"set sv_proxyIPRanges \\\"{{server.build.env.SETTINGS_PROXYIPRANGES}}\/32\\\"\",\r\n            \"set sv_endpoints\": \"set sv_endpoints \\\"{{server.build.env.SETTINGS_PROXYURL}}:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_tcp\": \"endpoint_add_tcp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"endpoint_add_udp\": \"endpoint_add_udp \\\"0.0.0.0:{{server.build.default.port}}\\\"\",\r\n            \"sv_hostname\": \"sv_hostname \\\"{{server.build.env.SERVER_HOSTNAME}}\\\"\",\r\n            \"sets sv_projectName\": \"sets sv_projectName \\\" {{server.build.env.SERVER_PROJECTNAME}}\\\"\",\r\n            \"sets sv_projectDesc\": \"sets sv_projectDesc \\\"{{server.build.env.SERVER_DESCRIPTION}}\\\"\",\r\n            \"sets tags\": \"sets tags \\\"{{server.build.env.SERVER_TAGES}}\\\"\",\r\n            \"set sv_licenseKey\": \"set sv_licenseKey {{server.build.env.FIVEM_LICENSE}}\",\r\n            \"set steam_webApiKey\": \"set steam_webApiKey {{server.build.env.STEAM_WEBAPIKEY}}\",\r\n            \"sv_maxclients\": \"sv_maxclients {{server.build.env.MAX_PLAYERS}}\",\r\n            \"sv_enforceGameBuild\": \"sv_enforceGameBuild {{server.build.env.BUILD}}\",\r\n            \"sets locale\": \"sets locale \\\"{{server.build.env.SERVER_LOCALE}}\\\"\",\r\n            \"sv_pureLevel\": \"sv_pureLevel {{server.build.env.SERVER_PURELEVEL}}\"\r\n        }\r\n    },\r\n    \"txData\/server\/server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"header\": \"# ==================================================\\n#   Diese Datei wird automatisch verwaltet!\\n#   Manuelle \\u00c4nderungen k\\u00f6nnen \\u00fcberschrieben werden.\\n# ==================================================\\n\",\r\n            \"exec_settings\": \"exec settings.cfg\",\r\n            \"exec_resource\": \"exec resource.cfg\",\r\n            \"exec_permission\": \"exec permission.cfg\",\r\n            \"exec_easyadmin\": \"exec easyadmin.cfg\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"succeeded. Welcome!\"\r\n}",
         "logs": "{}",
         "stop": "^C"
@@ -43,17 +42,17 @@
             "name": "Max Players",
             "description": "Set the fivem max play count",
             "env_variable": "MAX_PLAYERS",
-            "default_value": "48",
+            "default_value": "8",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1,1024",
+            "rules": "required|integer|between:1,50",
             "field_type": "text"
         },
         {
             "name": "Server Hostname",
             "description": "The name that shows up in the server browser",
             "env_variable": "SERVER_HOSTNAME",
-            "default_value": "My new FXServer!",
+            "default_value": "",
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string",
@@ -61,7 +60,7 @@
         },
         {
             "name": "fivem version update",
-            "description": "Turning the FiveM update script on and off - Always stay up to date.\n\nThis variable only applies once and is deactivated again after activation and successful update.\n\nYou can get the latest version from here - https:\/\/runtime.fivem.net\/artifacts\/fivem\/build_proot_linux\/master\/",
+            "description": "Turning the FiveM update script on and off - Always stay up to date.\r\n\r\nThis variable only applies once and is deactivated again after activation and successful update.\r\n\r\nYou can get the latest version from here - https:\/\/runtime.fivem.net\/artifacts\/fivem\/build_proot_linux\/master\/",
             "env_variable": "FIVEM_VERSION_UPDATE",
             "default_value": "0",
             "user_viewable": true,
@@ -95,7 +94,7 @@
             "env_variable": "TXADMIN_ENABLE",
             "default_value": "1",
             "user_viewable": false,
-            "user_editable": true,
+            "user_editable": false,
             "rules": "required|boolean",
             "field_type": "text"
         },
@@ -112,7 +111,7 @@
         {
             "name": "Empty Server Cache",
             "description": "This helps to remove obsolete or corrupted data, which can solve performance problems, script errors, crashes or problems loading the game world.",
-            "env_variable": "CACHE",
+            "env_variable": "SERVER_CACHE",
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
@@ -204,7 +203,7 @@
             "description": "",
             "env_variable": "PANEL_HOST",
             "default_value": "https:\/\/exemple.com",
-            "user_viewable": true,
+            "user_viewable": false,
             "user_editable": false,
             "rules": "url",
             "field_type": "text"
@@ -214,7 +213,7 @@
             "description": "",
             "env_variable": "PTERODACTYL_API_KEY",
             "default_value": "none",
-            "user_viewable": true,
+            "user_viewable": false,
             "user_editable": false,
             "rules": "string",
             "field_type": "text"
@@ -223,8 +222,8 @@
             "name": "SERVER ID",
             "description": "Server ID for internal use",
             "env_variable": "SERVER_ID",
-            "default_value": "",
-            "user_viewable": true,
+            "default_value": "none",
+            "user_viewable": false,
             "user_editable": false,
             "rules": "string",
             "field_type": "text"
