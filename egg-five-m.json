@@ -167,6 +167,66 @@
             "user_editable": true,
             "rules": "required|string|in:root-AQ,af-ZA,ar-AE,ar-BH,ar-DZ,ar-EG,ar-IQ,ar-JO,ar-KW,ar-LB,ar-LY,ar-MA,ar-OM,ar-QA,ar-SA,ar-SY,ar-TN,ar-YE,az-AZ,be-BY,bg-BG,bn-BD,ca-ES,cs-CZ,da-DK,de-AT,de-CH,de-DE,de-LU,de-LI,el-GR,en-AU,en-CA,en-GB,en-IE,en-IN,en-NZ,en-PH,en-SG,en-US,en-ZA,es-AR,es-BO,es-CL,es-CO,es-CR,es-CU,es-DO,es-EC,es-SV,es-GT,es-HN,es-MX,es-NI,es-PA,es-PE,es-PR,es-PY,es-ES,es-UY,es-VE,et-EE,fa-IR,fi-FI,fr-BE,fr-CA,fr-CH,fr-FR,fr-LU,fr-MC,he-IL,hi-IN,hr-HR,hu-HU,id-ID,is-IS,it-CH,it-IT,ja-JP,ko-KR,lt-LT,lv-LV,ms-MY,nl-BE,nl-NL,no-NO,pl-PL,pt-BR,pt-PT,ro-RO,ru-RU,sk-SK,sl-SI,sr-RS,sv-FI,sv-SE,th-TH,tr-TR,uk-UA,vi-VN,zh-CN,zh-HK,zh-MO,zh-SG,zh-TW",
             "field_type": "text"
+        },
+        {
+            "name": "Proxy",
+            "description": "Prevents the server list from advertising your server using its actual IP",
+            "env_variable": "SETTINGS_PROXY",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Proxy URL",
+            "description": "Makes the server list backend request your domain instead of default (example: zapdocs.example.com)",
+            "env_variable": "SETTINGS_PROXYURL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string",
+            "field_type": "text"
+        },
+        {
+            "name": "Proxy Range",
+            "description": "A space-separated list of IPv4 networks in CIDR notation to allow 'X-Real-IP' from, as well as bypass the rate limiter",
+            "env_variable": "SETTINGS_PROXYIPRANGES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string",
+            "field_type": "text"
+        },
+        {
+            "name": "Pterodactyl URL",
+            "description": "",
+            "env_variable": "PANEL_HOST",
+            "default_value": "https:\/\/exemple.com",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "url",
+            "field_type": "text"
+        },
+        {
+            "name": "Pterodactyl User API KEY",
+            "description": "",
+            "env_variable": "PTERODACTYL_API_KEY",
+            "default_value": "none",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "string",
+            "field_type": "text"
+        },
+        {
+            "name": "SERVER ID",
+            "description": "Server ID for internal use",
+            "env_variable": "SERVER_ID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "string",
+            "field_type": "text"
         }
     ]
 }
