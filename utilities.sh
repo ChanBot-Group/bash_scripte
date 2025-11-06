@@ -99,8 +99,8 @@ update_fivem() {
             chown -R "$(id -u):$(id -g)" "$TARGET_DIR/alpine"
         fi
 
-        if [ -f "./run.sh" ]; then
-            chown "$(id -u):$(id -g)" ./run.sh
+        if [ -f "$TARGET_DIR/run.sh" ]; then
+            rm "$TARGET_DIR/run.sh"
         fi
 
         # Update Variable zurücksetzen
@@ -166,7 +166,7 @@ clear_cache() {
 # 3️⃣ Chatfix / Chown / Cleanup
 # -------------------------------
 chatfix_chown_cleanup() {
-    DATEI="./alpine/opt/cfx-server/citizen/system_resources/chat/sv_chat.lua"
+    DATEI="$TARGET_DIR/alpine/opt/cfx-server/citizen/system_resources/chat/sv_chat.lua"
 
     # Blöcke auskommentieren
     if [ -f "$DATEI" ]; then
