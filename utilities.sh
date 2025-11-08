@@ -41,7 +41,7 @@ UPDATE_VARIABLE_URL="$PANEL_HOST/api/client/servers/$SERVER_ID/startup/variable"
 # Standard Variablen
 # -------------------------------
 WAIT="ask"   # globaler 5 Sekunden Timer
-SKIP_WAIT=false
+SKIP_WAIT=true
 
 # -------------------------------
 # Optionen parsen
