@@ -203,8 +203,8 @@
             "description": "",
             "env_variable": "PANEL_HOST",
             "default_value": "https:\/\/exemple.com",
-            "user_viewable": false,
-            "user_editable": false,
+            "user_viewable": true,
+            "user_editable": true,
             "rules": "url",
             "field_type": "text"
         },
@@ -213,8 +213,8 @@
             "description": "",
             "env_variable": "PTERODACTYL_API_KEY",
             "default_value": "none",
-            "user_viewable": false,
-            "user_editable": false,
+            "user_viewable": true,
+            "user_editable": true,
             "rules": "string",
             "field_type": "text"
         },
@@ -223,8 +223,8 @@
             "description": "Server ID for internal use",
             "env_variable": "SERVER_ID",
             "default_value": "none",
-            "user_viewable": false,
-            "user_editable": false,
+            "user_viewable": true,
+            "user_editable": true,
             "rules": "string",
             "field_type": "text"
         }
