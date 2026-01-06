@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2025-11-06T22:03:29+01:00",
+    "exported_at": "2026-01-06T17:51:31+01:00",
     "name": "FiveM",
     "author": "mainhunter@chanbot.de",
     "description": "A new FiveM egg for the latest builds due to recent changes in FiveM",
@@ -84,8 +84,8 @@
             "env_variable": "TXHOST_TXA_PORT",
             "default_value": "40120",
             "user_viewable": true,
-            "user_editable": false,
-            "rules": "required|string|max:20",
+            "user_editable": true,
+            "rules": "required|numeric|max:5",
             "field_type": "text"
         },
         {
@@ -125,7 +125,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string|max:200",
+            "rules": "nullable|string|max:200",
             "field_type": "text"
         },
         {
@@ -135,7 +135,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string|max:200",
+            "rules": "nullable|string|max:200",
             "field_type": "text"
         },
         {
@@ -145,7 +145,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string|max:50",
+            "rules": "nullable|string|max:50",
             "field_type": "text"
         },
         {
@@ -169,16 +169,6 @@
             "field_type": "text"
         },
         {
-            "name": "Activity Feed",
-            "description": "To set up an activity feed on our server, we first need to register an account on Mastodon.",
-            "env_variable": "SETTINGS_ACTIVITYFEED",
-            "default_value": "none",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "string",
-            "field_type": "text"
-        },
-        {
             "name": "Proxy",
             "description": "Prevents the server list from advertising your server using its actual IP",
             "env_variable": "SETTINGS_PROXY",
@@ -195,7 +185,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string",
+            "rules": "nullable|string",
             "field_type": "text"
         },
         {
@@ -205,7 +195,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string",
+            "rules": "nullable|string",
             "field_type": "text"
         },
         {
@@ -215,27 +205,37 @@
             "default_value": "https:\/\/exemple.com",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "url",
+            "rules": "nullable|url",
             "field_type": "text"
         },
         {
             "name": "Pterodactyl User API KEY",
             "description": "",
             "env_variable": "PTERODACTYL_API_KEY",
-            "default_value": "none",
+            "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string",
+            "rules": "nullable|string",
             "field_type": "text"
         },
         {
             "name": "SERVER ID",
             "description": "Server ID for internal use",
             "env_variable": "SERVER_ID",
-            "default_value": "none",
+            "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string",
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Activity Feed",
+            "description": "To set up an activity feed on our server, we first need to register an account on Mastodon.",
+            "env_variable": "SETTINGS_ACTIVITYFEED",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
             "field_type": "text"
         }
     ]
