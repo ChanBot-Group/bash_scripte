@@ -169,6 +169,16 @@
             "field_type": "text"
         },
         {
+            "name": "Activity Feed",
+            "description": "To set up an activity feed on our server, we first need to register an account on Mastodon.",
+            "env_variable": "SETTINGS_ACTIVITYFEED",
+            "default_value": "none",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string",
+            "field_type": "text"
+        },
+        {
             "name": "Proxy",
             "description": "Prevents the server list from advertising your server using its actual IP",
             "env_variable": "SETTINGS_PROXY",
