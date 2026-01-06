@@ -105,7 +105,7 @@
             "default_value": "3258",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:2060,2189,2372,2545,2699,2802,2944,3095,3258,3407,3570",
+            "rules": "required|string|in:1604,1737,1868,2060,2189,2372,2545,2612,2699,2802,2824,2845,2944,3095,3258,3407,3570,3717",
             "field_type": "text"
         },
         {
