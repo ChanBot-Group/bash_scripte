@@ -89,16 +89,6 @@
             "field_type": "text"
         },
         {
-            "name": "Enable txadmin",
-            "description": "Enables txadmin.\r\n\r\nset to 1 to enable. (default is 1 for false)",
-            "env_variable": "TXADMIN_ENABLE",
-            "default_value": "1",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": "required|boolean",
-            "field_type": "text"
-        },
-        {
             "name": "Gamebuilds",
             "description": "Enforcing game build allows you to force a specific DLC version to your server, allowing you to play with the latest maps, clothing, vehicles and more!",
             "env_variable": "BUILD",
