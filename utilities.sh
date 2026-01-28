@@ -1,22 +1,13 @@
 #!/bin/bash
-# ==============================================
-# Utilities.sh für FiveM Server in Pterodactyl
-# ==============================================
 
 set -e
 
-# -------------------------------
-# Farben für Terminal-Ausgabe
-# -------------------------------
-RED='\033[1;31m'    # fett rot
-GREEN='\033[1;32m'  # fett grün
-YELLOW='\033[1;33m' # fett gelb
-BLUE='\033[1;34m'   # fett blau
-NC='\033[0m'        # no color / reset
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[0m'
 
-# -------------------------------
-# ENV aus Pterodactyl Panel
-# -------------------------------
 if [ -z "$PANEL_HOST" ]; then
     echo -e "${RED}Fehler: PANEL_HOST ist nicht gesetzt! Bitte im Panel Environment Variables eintragen.${NC}"
     exit 1
@@ -37,20 +28,13 @@ if [ -z "$PRIVATE_SERVER" ]; then
     PRIVATE_SERVER="false"
 fi
 
-# API-URLs automatisch
 TARGET_DIR="/home/container"
 PTERODACTYL_API_URL="$PANEL_HOST/api/client/servers/$SERVER_ID/power"
 UPDATE_VARIABLE_URL="$PANEL_HOST/api/client/servers/$SERVER_ID/startup/variable"
 
-# -------------------------------
-# Standard Variablen
-# -------------------------------
-WAIT="ask"   # globaler 5 Sekunden Timer
+WAIT="ask"
 SKIP_WAIT=false
 
-# -------------------------------
-# Optionen parsen
-# -------------------------------
 while getopts "yn" opt; do
   case $opt in
     y) SKIP_WAIT=true ;;
@@ -59,9 +43,6 @@ while getopts "yn" opt; do
   esac
 done
 
-# -------------------------------
-# Globale Wait-Funktion
-# -------------------------------
 wait_timer() {
     local sec=${1:-5}
     if [ "$SKIP_WAIT" = false ]; then
@@ -73,17 +54,12 @@ wait_timer() {
     fi
 }
 
-# -------------------------------
-# 0️⃣ Private/Public Toggle sv_master1
-# -------------------------------
 set_private_server() {
     CFG="$TARGET_DIR/txData/server/server.cfg"
 
-    # Alte sv_master1 Zeilen löschen
     sed -i '/^sv_master1 /d' "$CFG"
     sed -i '/^# sv_master1 /d' "$CFG"
 
-    # PRIVATE_SERVER bereinigen: klein, ohne Leerzeichen
     VALUE=$(echo "$PRIVATE_SERVER" | tr '[:upper:]' '[:lower:]' | xargs)
 
     if grep -q '^sets tags' "$CFG"; then
@@ -105,15 +81,11 @@ set_private_server() {
     fi
 }
 
-# -------------------------------
-# 1️⃣ Update Funktion
-# -------------------------------
 update_fivem() {
     echo -e "${BLUE}=== FiveM Update ===${NC}"
     mkdir -p "$TARGET_DIR"
     ARTIFACTS_URL="https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/"
 
-    # Neueste Version ermitteln
     HTML_CONTENT=$(curl -s "$ARTIFACTS_URL")
     LATEST_VERSION=$(echo "$HTML_CONTENT" | grep -oP 'href="\./\K[0-9]+-[a-z0-9]+(?=/fx.tar.xz)' | sort -n | tail -1)
     if [ -z "$LATEST_VERSION" ]; then
@@ -121,7 +93,6 @@ update_fivem() {
         exit 1
     fi
 
-    # Download
     URL="${ARTIFACTS_URL}${LATEST_VERSION}/fx.tar.xz"
     curl -L "$URL" -o "$TARGET_DIR/fx.tar.xz"
 
@@ -140,7 +111,6 @@ update_fivem() {
             rm "$TARGET_DIR/run.sh"
         fi
 
-        # Update Variable zurücksetzen
         RESPONSE=$(curl -s -X PUT "$UPDATE_VARIABLE_URL" \
             -H "Authorization: Bearer $PTERODACTYL_API_KEY" \
             -H "Content-Type: application/json" \
@@ -158,7 +128,6 @@ update_fivem() {
 
         wait_timer
 
-        # Server Neustart
         curl -s -X POST "$PTERODACTYL_API_URL" \
             -H "Authorization: Bearer $PTERODACTYL_API_KEY" \
             -H "Content-Type: application/json" \
@@ -171,9 +140,6 @@ update_fivem() {
     fi
 }
 
-# -------------------------------
-# 2️⃣ Cache Funktion
-# -------------------------------
 clear_cache() {
     echo -e "${BLUE}=== Cache löschen ===${NC}"
     if [ -d "$TARGET_DIR/txData/server/cache" ]; then
@@ -181,7 +147,6 @@ clear_cache() {
         echo -e "${GREEN}Cache gelöscht.${NC}"
     fi
 
-    # Update Variable zurücksetzen
     RESPONSE=$(curl -k -s -X PUT "$UPDATE_VARIABLE_URL" \
         -H "Authorization: Bearer $PTERODACTYL_API_KEY" \
         -H "Content-Type: application/json" \
@@ -199,13 +164,9 @@ clear_cache() {
     wait_timer
 }
 
-# -------------------------------
-# 3️⃣ Chatfix / Chown / Cleanup
-# -------------------------------
 chatfix_chown_cleanup() {
     DATEI="$TARGET_DIR/alpine/opt/cfx-server/citizen/system_resources/chat/sv_chat.lua"
 
-    # Blöcke auskommentieren
     if [ -f "$DATEI" ]; then
         sed -i "/AddEventHandler('playerJoining',/,/end)/ s/^/--/" "$DATEI"
         sed -i "/AddEventHandler('playerDropped',/,/end)/ s/^/--/" "$DATEI"
@@ -213,23 +174,16 @@ chatfix_chown_cleanup() {
 
     find . -type f ! -name 'utilities.sh' ! -name '.pteroignore' -exec chown "$(id -u):$(id -g)" {} +
 
-    # Chown gezielt auf utilities.sh
     [ -f "$TARGET_DIR/utilities.sh" ] && chown "$(id -u):$(id -g)" "$TARGET_DIR/utilities.sh"
 
-    # Alte/core-Dateien entfernen
     rm -f core \
         "$TARGET_DIR/txData/server/core" \
         "$TARGET_DIR/txData/server/.replxx_history"
 }
 
-# -------------------------------
-# Main
-# -------------------------------
-# Immer Chatfix/Chown/Cleanup ausführen
 chatfix_chown_cleanup
 set_private_server
 
-# Befehle auswerten
 case "$1" in
     update)
         update_fivem
