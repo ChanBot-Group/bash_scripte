@@ -32,6 +32,11 @@ if [ -z "$SERVER_ID" ]; then
     exit 1
 fi
 
+if [ -z "$PRIVATE_SERVER" ]; then
+    echo -e "${YELLOW}PRIVATE_SERVER ist nicht gesetzt, Standard: false (öffentlich)${NC}"
+    PRIVATE_SERVER="false"
+fi
+
 # API-URLs automatisch
 TARGET_DIR="/home/container"
 PTERODACTYL_API_URL="$PANEL_HOST/api/client/servers/$SERVER_ID/power"
@@ -65,6 +70,38 @@ wait_timer() {
             # echo -e "${YELLOW}$i...${NC}"
             sleep 1
         done
+    fi
+}
+
+# -------------------------------
+# 0️⃣ Private/Public Toggle sv_master1
+# -------------------------------
+set_private_server() {
+    CFG="$TARGET_DIR/txData/server/server.cfg"
+
+    # Alte sv_master1 Zeilen löschen
+    sed -i '/^sv_master1 /d' "$CFG"
+    sed -i '/^# sv_master1 /d' "$CFG"
+
+    # PRIVATE_SERVER bereinigen: klein, ohne Leerzeichen
+    VALUE=$(echo "$PRIVATE_SERVER" | tr '[:upper:]' '[:lower:]' | xargs)
+
+    if grep -q '^sets tags' "$CFG"; then
+        if [ "$VALUE" = "true" ] || [ "$VALUE" = "1" ]; then
+            sed -i '/^sets tags/ a sv_master1 ""' "$CFG"
+            echo -e "${GREEN}Server auf PRIVAT gesetzt.${NC}"
+        else
+            sed -i '/^sets tags/ a # sv_master1 ""' "$CFG"
+            echo -e "${GREEN}Server auf ÖFFENTLICH gesetzt.${NC}"
+        fi
+    else
+        if [ "$VALUE" = "true" ] || [ "$VALUE" = "1" ]; then
+            echo 'sv_master1 ""' >> "$CFG"
+            echo -e "${GREEN}Server auf PRIVAT gesetzt (Fallback).${NC}"
+        else
+            echo '# sv_master1 ""' >> "$CFG"
+            echo -e "${GREEN}Server auf ÖFFENTLICH gesetzt (Fallback).${NC}"
+        fi
     fi
 }
 
@@ -109,7 +146,7 @@ update_fivem() {
             -H "Content-Type: application/json" \
             -H "Accept: Application/vnd.pterodactyl.v1+json" \
             -d '{
-                "key": "FIVEM_VERSION_UPDATE",
+                "key": "UPDATE",
                 "value": "0"
             }')
 
@@ -119,7 +156,7 @@ update_fivem() {
             echo -e "${RED}Fehler beim Setzen der UPDATE-Variable.${NC}"
         fi
 
-        wait_timer 5
+        wait_timer
 
         # Server Neustart
         curl -s -X POST "$PTERODACTYL_API_URL" \
@@ -149,7 +186,7 @@ clear_cache() {
         -H "Authorization: Bearer $PTERODACTYL_API_KEY" \
         -H "Content-Type: application/json" \
         -d '{
-            "key": "SERVER_CACHE",
+            "key": "CACHE",
             "value": "0"
         }')
 
@@ -159,7 +196,7 @@ clear_cache() {
         echo -e "${RED}Fehler beim Setzen der CACHE-Variable.${NC}"
     fi
 
-    wait_timer 5
+    wait_timer
 }
 
 # -------------------------------
@@ -190,6 +227,7 @@ chatfix_chown_cleanup() {
 # -------------------------------
 # Immer Chatfix/Chown/Cleanup ausführen
 chatfix_chown_cleanup
+set_private_server
 
 # Befehle auswerten
 case "$1" in
