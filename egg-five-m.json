@@ -89,6 +89,16 @@
             "field_type": "text"
         },
         {
+            "name": "Private Server",
+            "description": "",
+            "env_variable": "PRIVATE_SERVER",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
             "name": "Gamebuilds",
             "description": "Enforcing game build allows you to force a specific DLC version to your server, allowing you to play with the latest maps, clothing, vehicles and more!",
             "env_variable": "BUILD",
