@@ -89,7 +89,7 @@ set_private_server() {
     if grep -q '^sets tags' "$CFG"; then
         if [ "$VALUE" = "true" ] || [ "$VALUE" = "1" ]; then
             sed -i '/^sets tags/ a sv_master1 ""' "$CFG"
-            echo -e "${GREEN}Server auf PRIVAT gesetzt.${NC}"
+            echo -e "${RED}Server auf PRIVAT gesetzt.${NC}"
         else
             sed -i '/^sets tags/ a # sv_master1 ""' "$CFG"
             echo -e "${GREEN}Server auf ÖFFENTLICH gesetzt.${NC}"
@@ -97,10 +97,10 @@ set_private_server() {
     else
         if [ "$VALUE" = "true" ] || [ "$VALUE" = "1" ]; then
             echo 'sv_master1 ""' >> "$CFG"
-            echo -e "${GREEN}Server auf PRIVAT gesetzt (Fallback).${NC}"
+            echo -e "${RED}Server auf PRIVAT gesetzt.${NC}"
         else
             echo '# sv_master1 ""' >> "$CFG"
-            echo -e "${GREEN}Server auf ÖFFENTLICH gesetzt (Fallback).${NC}"
+            echo -e "${GREEN}Server auf ÖFFENTLICH gesetzt.${NC}"
         fi
     fi
 }
