@@ -90,7 +90,7 @@
         },
         {
             "name": "Private Server",
-            "description": "",
+            "description": "This Button triggers the Privat mode for the FiveM Server",
             "env_variable": "PRIVATE_SERVER",
             "default_value": "false",
             "user_viewable": true,
