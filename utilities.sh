@@ -116,7 +116,7 @@ update_fivem() {
             -H "Content-Type: application/json" \
             -H "Accept: Application/vnd.pterodactyl.v1+json" \
             -d '{
-                "key": "UPDATE",
+                "key": "UPDATE_VARIABLE_URL",
                 "value": "0"
             }')
 
@@ -151,7 +151,7 @@ clear_cache() {
         -H "Authorization: Bearer $PTERODACTYL_API_KEY" \
         -H "Content-Type: application/json" \
         -d '{
-            "key": "CACHE",
+            "key": "SERVER_CACHE",
             "value": "0"
         }')
 
