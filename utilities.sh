@@ -116,7 +116,7 @@ update_fivem() {
             -H "Content-Type: application/json" \
             -H "Accept: Application/vnd.pterodactyl.v1+json" \
             -d '{
-                "key": "UPDATE_VARIABLE_URL",
+                "key": "FIVEM_VERSION_UPDATE",
                 "value": "0"
             }')
 
