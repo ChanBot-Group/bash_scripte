@@ -1,0 +1,9 @@
+/.pteroignore
+/utilities.sh
+/alpine
+/txData/server/cache/*
+/txData/server/resources/.*
+/txData/server/resources/*/.*
+/txData/server/.replxx_history
+/txData/server/server.cfg.bkp
+/default/logs/
