@@ -2,8 +2,9 @@
 /utilities.sh
 /alpine
 /txData/server/cache/*
-/txData/server/resources/.*
-/txData/server/resources/*/.*
+/txData/server/**/.*/
+/txData/server/**/.*/**
+!/txData/server/resources/**/.fxap
 /txData/server/.replxx_history
 /txData/server/server.cfg.bkp
 /default/logs/
