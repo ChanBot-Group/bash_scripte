@@ -19,7 +19,7 @@ if [ -z "$PTERODACTYL_API_KEY" ]; then
 fi
 
 if [ -z "$SERVER_ID" ]; then
-    echo -e "${RED}Fehler: SERVER_'ID ist nicht gesetzt! Bitte im Panel Environment Variables eintragen.${NC}"
+    echo -e "${RED}Fehler: SERVER_ID ist nicht gesetzt! Bitte im Panel Environment Variables eintragen.${NC}"
     exit 1
 fi
 
